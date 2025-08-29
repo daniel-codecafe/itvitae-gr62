@@ -1,5 +1,6 @@
 package com.jorisvanbreugel.les3.services;
 
+import com.jorisvanbreugel.les3.exceptions.StudentAlreadyAssignedException;
 import com.jorisvanbreugel.les3.models.Course;
 import com.jorisvanbreugel.les3.models.Student;
 import com.jorisvanbreugel.les3.repositories.CourseRepository;
@@ -50,14 +51,12 @@ public class CourseService {
 
         // Logica validatie
         if (course.getStudents().contains(student)) {
-            throw new RuntimeException("Deze student is al aangemeld voor deze course.");
+            throw new StudentAlreadyAssignedException();
         }
 
         if (course.isCourseFull()) {
             throw new RuntimeException("Deze course zit vol!");
         }
-
-        // Validatie??
 
         // Data aanpassen
         course.addStudent(student);

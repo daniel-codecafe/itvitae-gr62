@@ -2,6 +2,8 @@ package com.jorisvanbreugel.les3.controllers;
 
 import com.jorisvanbreugel.les3.dto.CourseCreateDTO;
 import com.jorisvanbreugel.les3.dto.CourseResponseDTO;
+import com.jorisvanbreugel.les3.dto.ErrorDTO;
+import com.jorisvanbreugel.les3.exceptions.StudentAlreadyAssignedException;
 import com.jorisvanbreugel.les3.mappers.CourseMapper;
 import com.jorisvanbreugel.les3.models.Course;
 import com.jorisvanbreugel.les3.services.CourseService;
@@ -80,4 +82,10 @@ public class CourseController {
         Course result = courseService.enrollStudent(courseId, studentId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+//    @ExceptionHandler(JojoException.class)
+//    public ResponseEntity<String> exceptionHandler(JojoException e) {
+//
+//    }
+
 }
