@@ -16,7 +16,10 @@ public class Course {
 
     private Integer maxStudents;
 
+    // 1. Relatiebeheer
+    // - Test
     @ManyToMany
+    // - Test
     @JoinTable(
             name = "course_student",
             joinColumns = @JoinColumn(name = "course_id"),

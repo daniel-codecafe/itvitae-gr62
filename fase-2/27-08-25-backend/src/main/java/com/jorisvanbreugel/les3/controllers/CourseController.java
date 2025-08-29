@@ -38,10 +38,11 @@ public class CourseController {
     }
 
     @PostMapping
-    public ResponseEntity<Course> createCourse(@Valid @RequestBody CourseCreateDTO course) {
-        Course newCourse = new Course(course.name());
+    public ResponseEntity<CourseResponseDTO> createCourse(@Valid @RequestBody CourseCreateDTO course) {
+        Course newCourse = courseMapper.toCourse(course);
         Course result = courseService.createCourse(newCourse);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
+        var data = courseMapper.toResponseDTO(result);
+        return new ResponseEntity<>(data, HttpStatus.CREATED);
     }
 
     @GetMapping("/{courseId}")
@@ -82,6 +83,31 @@ public class CourseController {
         Course result = courseService.enrollStudent(courseId, studentId);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+    // Controller -> Service -> Repository
+    //                               ||
+    //                              \  /
+    //                               \/
+    //              Controller <- Service
+
+//    Beste ambtenaar,
+//
+//    1
+//    2
+//
+//    Met vriendelijke groet,
+//
+//    Joris
+
+
+//    Beste Joris,
+
+//    De lantaarnpaal staat.
+
+//    Met vriendelijke groet,
+
+
+//    Ambtenaar
 
 //    @ExceptionHandler(JojoException.class)
 //    public ResponseEntity<String> exceptionHandler(JojoException e) {

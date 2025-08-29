@@ -63,6 +63,8 @@ public class CourseService {
         student.addCourse(course);
 
         // Data opslaan (+ terugsturen)
+        // Course result = courseRepository.save(course);
+        // return result;
         return courseRepository.save(course);
     }
 }
