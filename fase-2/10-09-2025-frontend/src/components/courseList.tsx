@@ -1,15 +1,17 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
+import type { CourseDTO } from "../types/models";
 
 const CourseList = () => {
   const {
     data: courses,
     isLoading,
     error,
-  } = useQuery({
+  } = useQuery<CourseDTO>({
     queryKey: ["courses"],
     queryFn: async () => {
-      const response = await fetch(`${API_URL}/courses`);
+      // const response = await fetch(`${API_URL}/courses`);
+      const response = await fetch(API_URL + '/courses' + dit + '...' + dat + '....');
       if (!response.ok) {
         throw new Error("Failed to fetch courses");
       }

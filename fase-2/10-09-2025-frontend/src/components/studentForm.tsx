@@ -1,16 +1,46 @@
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { API_URL } from "../App";
+
+interface Student {
+  name: string;
+  age: number;
+}
 
 const StudentForm = () => {
-  const [ state, setState ] = useState({name: '', age: 0});
+  const [state, setState] = useState<Student>({ name: '', age: 0 });
 
-  const handleSubmit = (event) => {
+  const queryClient = useQueryClient();
+
+  const createStudent = useMutation({
+    mutationFn: async (studentData: Student) => {
+      const response = await fetch(`${API_URL}/students`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(studentData)
+      });
+      if (!response.ok) throw new Error('Failed to create student');
+      return response.json();
+    },
+    onSuccess: () => {
+      setState({ name: '', age: 0 });
+      queryClient.invalidateQueries({ queryKey: ['students'] }); // Magic!
+    }
+  });
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    console.log("Formulier submitted: " + state.name);
+    // console.log("Formulier submitted: " + state.name);
+    createStudent.mutate(state);
+    // createStudent.mutate({
+    //   name: 'hallo',
+    //   age: 12
+    // });
   };
 
-  const handleChange = (event) => {
-    const {name, value} = event.target;
-    setState({...state, [name]: value});
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setState({ ...state, [name]: value });
   }
 
   return (
