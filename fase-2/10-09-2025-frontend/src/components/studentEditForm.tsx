@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import type { StudentDTO, StudentUpdateDTO } from "../types/models";
 import { API_URL } from "../App";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 interface StudentEditFormProps {
     studentId: number
@@ -19,12 +19,15 @@ const StudentEditForm = ({ studentId }: StudentEditFormProps) => {
                 throw new Error(`Failed to fetch student with id ${studentId}`);
             }
 
-            const student = await response.json();
-            setState({ name: student.name, age: student.age })
-
-            return student;
+            return response.json();
         },
     });
+
+    useEffect(() => {
+        if (student) {
+            setState({ name: student.name, age: student.age })
+        }
+    }, [student])
 
     if (isLoading) {
         return <p>Laden...</p>
