@@ -1,14 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { StudentDTO, StudentUpdateDTO } from "../types/models";
 import { API_URL } from "../App";
 import { useEffect, useState } from "react";
 
 interface StudentEditFormProps {
-    studentId: number
+    studentId: number;
+    setIsEditing: (editing: boolean) => void;
 }
 
-const StudentEditForm = ({ studentId }: StudentEditFormProps) => {
-
+const StudentEditForm = ({ studentId, setIsEditing }: StudentEditFormProps) => {
     const [state, setState] = useState<StudentUpdateDTO>({ name: '', age: 0 });
 
     const { data: student, isLoading, error, } = useQuery<StudentDTO>({
@@ -21,6 +21,24 @@ const StudentEditForm = ({ studentId }: StudentEditFormProps) => {
 
             return response.json();
         },
+    });
+
+    const queryClient = useQueryClient();
+
+    const updateStudent = useMutation({
+        mutationFn: async (studentData: StudentUpdateDTO) => {
+            const response = await fetch(`${API_URL}/students/${studentId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(studentData)
+            });
+            if (!response.ok) throw new Error('Failed to update student');
+            return response.json();
+        },
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['students'] }); // Magic!
+            setIsEditing(false);
+        }
     });
 
     useEffect(() => {
@@ -37,12 +55,13 @@ const StudentEditForm = ({ studentId }: StudentEditFormProps) => {
         return <p>Er is iets fout gegaan</p>
     }
 
-    if (!student) {
-        return <p>Geen student gevonden</p>
-    }
+    // if (!student) {
+    //     return <p>Geen student gevonden</p>
+    // }
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        updateStudent.mutate(state);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -80,6 +99,8 @@ const StudentEditForm = ({ studentId }: StudentEditFormProps) => {
 
                 <button type="submit">Edit Student</button>
             </form>
+
+            <input type='button' value='Terug' onClick={() => { setIsEditing(false) }} />
         </>
     );
 }
