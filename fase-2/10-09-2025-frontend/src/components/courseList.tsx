@@ -10,8 +10,7 @@ const CourseList = () => {
   } = useQuery<CourseDTO>({
     queryKey: ["courses"],
     queryFn: async () => {
-      // const response = await fetch(`${API_URL}/courses`);
-      const response = await fetch(API_URL + '/courses' + dit + '...' + dat + '....');
+      const response = await fetch(`${API_URL}/courses`);
       if (!response.ok) {
         throw new Error("Failed to fetch courses");
       }

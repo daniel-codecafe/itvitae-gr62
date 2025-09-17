@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
 import type { StudentDTO } from "../types/models";
+import StudentEditForm from "./studentEditForm";
 // import type { StudentResponseDTO } from "../types";
 
 interface StudentDetailProps {
@@ -10,11 +11,7 @@ interface StudentDetailProps {
 
 
 const StudentDetail = ({ studentId, setStudentId }: StudentDetailProps) => {
-    const {
-        data: student,
-        isLoading,
-        error,
-    } = useQuery<StudentDTO>({
+    const { data: student, isLoading, error, } = useQuery<StudentDTO>({
         queryKey: ["students", studentId],
         queryFn: async () => {
             const response = await fetch(`${API_URL}/students/${studentId}`);
@@ -35,6 +32,10 @@ const StudentDetail = ({ studentId, setStudentId }: StudentDetailProps) => {
 
     if (!student) {
         return <p>Geen student gevonden</p>
+    }
+
+    if (student) {
+        return <StudentEditForm studentId={student.id} />
     }
 
     return <>

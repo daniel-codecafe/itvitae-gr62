@@ -1,0 +1,84 @@
+import { useQuery } from "@tanstack/react-query";
+import type { StudentDTO, StudentUpdateDTO } from "../types/models";
+import { API_URL } from "../App";
+import { useState } from "react";
+
+interface StudentEditFormProps {
+    studentId: number
+}
+
+const StudentEditForm = ({ studentId }: StudentEditFormProps) => {
+
+    const [state, setState] = useState<StudentUpdateDTO>({ name: '', age: 0 });
+
+    const { data: student, isLoading, error, } = useQuery<StudentDTO>({
+        queryKey: ["students", studentId],
+        queryFn: async () => {
+            const response = await fetch(`${API_URL}/students/${studentId}`);
+            if (!response.ok) {
+                throw new Error(`Failed to fetch student with id ${studentId}`);
+            }
+
+            const student = await response.json();
+            setState({ name: student.name, age: student.age })
+
+            return student;
+        },
+    });
+
+    if (isLoading) {
+        return <p>Laden...</p>
+    }
+
+    if (error) {
+        return <p>Er is iets fout gegaan</p>
+    }
+
+    if (!student) {
+        return <p>Geen student gevonden</p>
+    }
+
+    const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+    };
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setState({ ...state, [name]: value });
+    }
+
+    return (
+        <>
+            <h3>Student edit form</h3>
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="name">Student Name:</label>
+                    <input
+                        type="text"
+                        id="name"
+                        name="name"
+                        value={state.name}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <div>
+                    <label htmlFor="age">Age:</label>
+                    <input
+                        type="number"
+                        id="age"
+                        name="age"
+                        min={0}
+                        max={150}
+                        value={state.age}
+                        onChange={handleChange}
+                    />
+                </div>
+
+                <button type="submit">Edit Student</button>
+            </form>
+        </>
+    );
+}
+
+export default StudentEditForm

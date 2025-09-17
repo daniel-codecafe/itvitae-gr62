@@ -58,7 +58,15 @@ const StudentForm = () => {
 
       <div>
         <label htmlFor="age">Age:</label>
-        <input type="number" id="age" name="age" min={0} max={150} />
+        <input
+          type="number"
+          id="age"
+          name="age"
+          min={0}
+          max={150}
+          value={state.age}
+          onChange={handleChange}
+        />
       </div>
 
       <button type="submit">Add Student</button>
