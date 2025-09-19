@@ -11,6 +11,7 @@ const MainLayout = () => {
           Students
         </NavLink>
         <NavLink to="/courses">Courses</NavLink>
+        <NavLink to="/enrollment">Enroll</NavLink>
       </nav>
       <main>
         <Outlet />

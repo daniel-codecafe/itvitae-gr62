@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { API_URL } from "../App";
 import StudentDetail from "./studentDetail";
 import { useState } from "react";
-import type { StudentResponseDTO } from "../types";
+import type { StudentDTO } from "../types";
 
 const StudentList = () => {
   const [studentId, setStudentId] = useState<number>(NaN);
@@ -11,7 +11,7 @@ const StudentList = () => {
     data: students,
     isLoading,
     error,
-  } = useQuery<StudentResponseDTO[]>({
+  } = useQuery<StudentDTO[]>({
     queryKey: ["students"],
     queryFn: async () => {
       const response = await fetch(`${API_URL}/students`);
@@ -44,7 +44,7 @@ const StudentList = () => {
           {students.map((student) => (
             <li key={student.id} onClick={() => {
               setStudentId(student.id);
-              console.log("Student id", studentId);
+              // console.log("Student id", studentId);
             }} >
               <strong>{student.name}</strong> (Age: {student.age})
             </li>

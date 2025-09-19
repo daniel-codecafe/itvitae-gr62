@@ -3,7 +3,7 @@ import { API_URL } from "../App";
 import type { StudentDTO } from "../types/models";
 import StudentEditForm from "./studentEditForm";
 import { useState } from "react";
-// import type { StudentResponseDTO } from "../types";
+import EnrolledCourse from "./EnrolledCourse";
 
 interface StudentDetailProps {
     studentId: number;
@@ -48,10 +48,38 @@ const StudentDetail = ({ studentId, setStudentId }: StudentDetailProps) => {
             <p>ID: {student.id}</p>
             <p>Naam: {student.name}</p>
             <p>Leeftijd: {student.age}</p>
-            <input type='button' value='Terug' onClick={() => { setStudentId(NaN) }} />
-            <input type='button' value='Bewerken' onClick={() => { setIsEditing(true) }} />
 
-        </div>
+            <h3>Courses</h3>
+
+            {/* Dit.... */}
+            {/* {student.courses.map(function (course) {
+                return <div>
+                    <span key={course.id} >{course.name} </span>
+                    <input type="button" value='Afmelden' />
+                </div>
+            }
+            )} */}
+
+            {/* ...is het zelfde als dit!
+            {student.courses.map(course =>
+                <div>
+                    <span key={course.id} >{course.name} </span>
+                    <input type="button" value='Afmelden' onClick={() => { onUnenroll(course.id) }} />
+                </div>
+            )} */}
+
+            <div>
+                {student.courses.map(course =>
+                    <EnrolledCourse key={course.id} studentId={studentId} courseSummary={course} />
+                )}
+            </div>
+
+            <div>
+                < input type='button' value='Terug' onClick={() => { setStudentId(NaN) }} />
+                <input type='button' value='Bewerken' onClick={() => { setIsEditing(true) }} />
+            </div>
+
+        </div >
     </>
 }
 
